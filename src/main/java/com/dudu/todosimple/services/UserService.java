@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dudu.todosimple.models.User;
-import com.dudu.todosimple.repositories.TaskRepository;
 import com.dudu.todosimple.repositories.UserRepository;
 
 @Service
@@ -16,25 +15,26 @@ public class UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private TaskRepository taskRepository;
 	
-	
-	public User findById(Long id) {
+	// Procurar usuário pelo id
+	public User findById(Long id) { 
 		Optional<User> user = this.userRepository.findById(id); //É opicional eu receber de volta esse usuário , eu printo , caso contrário , print que não foi encontrado . 
 		return user.orElseThrow(() -> new RuntimeException( 
 				"Usuário não encontrado! Id: " + id + ", Tipo: " + User.class.getName()
 				));
 	}
 	
+	
+	//Criar usuário
 	@Transactional
 	public User create(User obj) {
 		obj.setId(null);
 		obj = this.userRepository.save(obj);
-		this.taskRepository.saveAll(obj.getTasks());
 		return obj;
 	}
 	
+	
+	//Atualizar senha
 	@Transactional
 	public User update(User obj) {
 		User newObj = findById(obj.getId());
@@ -43,6 +43,7 @@ public class UserService {
 	}
 	
 	
+	//Deletar usuário
 	public void delete(Long id) {
 		findById(id);
 		try {
