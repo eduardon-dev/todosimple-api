@@ -20,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.dudu.todosimple.models.Task;
 import com.dudu.todosimple.services.TaskService;
+import com.dudu.todosimple.services.UserService;
 
 @RestController
 @RequestMapping("/task")
@@ -29,6 +30,8 @@ public class TaskController{
 	@Autowired
 	private TaskService taskService;
 	
+	@Autowired
+	private UserService userService;
 	
 	
 	@GetMapping("/{id}")
@@ -40,6 +43,7 @@ public class TaskController{
 	
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<List<Task>>   findAllByUserId(@PathVariable Long userId){
+		userService.findById(userId);
 		List<Task> objs = this.taskService.findAllByUserId(userId);
 		return ResponseEntity.ok().body(objs);
 	}
